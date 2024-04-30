@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>时间胶囊的秘密</title>
+    <title>Secrets of the Time Capsule</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body, html {
@@ -13,7 +13,7 @@
         }
         .bg {
             /* Use the generated image as a background */
-            background-image: url('1.png');
+            background-image: url('https://github.com/heishen6/Mixed_Reality_Coursework/blob/main/static/1.png?raw=true');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -86,23 +86,23 @@
 <div class="bg">
     <div class="overlay">
         <div id="start-container" class="content">
-            <h2>The Time Capsule Mystery 的解密神器</h2>
-            <button id="start-video" class="btn btn-primary">开始解密吧</button>
+            <h2>The Decryption Tool for The Mystery of The Time Capsule</h2>
+            <button id="start-video" class="btn btn-primary">Start the decryption</button>
         </div>
 
         <div class="card text-dark content" style="display: none;">
             <div class="card-body">
-                <h3 class="card-title">解密数字扫描器</h3>
-                <p>将相机对准图片以解密隐藏数字。</p>
+                <h3 class="card-title">Decryption Digital Scanner</h3>
+                <p>Point the camera at the image to decrypt hidden numbers.</p>
                 <video id="video" autoplay playsinline></video>
-                <button id="scan" class="btn btn-primary btn-block mt-3">扫描图片</button>
+                <button id="scan" class="btn btn-primary btn-block mt-3">Click to Decrypt</button>
             </div>
             <div id="loading" class="loader" style="display: none;"></div>
         </div>
 
         <div class="result-container content" id="result">
             <div class="alert alert-success">
-                解密数字: <span id="decoded-number"></span>
+                Decrypted Number: <span id="decoded-number"></span>
             </div>
         </div>
     </div>

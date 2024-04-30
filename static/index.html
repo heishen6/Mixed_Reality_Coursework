@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间胶囊的秘密</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .bg {
+            /* Use the generated image as a background */
+            background-image: url('1.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content {
+            z-index: 2;
+        }
+        .btn-primary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #5a6268;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+        }
+        .card-body {
+            padding: 1rem;
+            color: #000;
+        }
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 6px solid #3498db;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #video {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .result-container {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg">
+    <div class="overlay">
+        <div id="start-container" class="content">
+            <h2>The Time Capsule Mystery 的解密神器</h2>
+            <button id="start-video" class="btn btn-primary">开始解密吧</button>
+        </div>
+
+        <div class="card text-dark content" style="display: none;">
+            <div class="card-body">
+                <h3 class="card-title">解密数字扫描器</h3>
+                <p>将相机对准图片以解密隐藏数字。</p>
+                <video id="video" autoplay playsinline></video>
+                <button id="scan" class="btn btn-primary btn-block mt-3">扫描图片</button>
+            </div>
+            <div id="loading" class="loader" style="display: none;"></div>
+        </div>
+
+        <div class="result-container content" id="result">
+            <div class="alert alert-success">
+                解密数字: <span id="decoded-number"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('start-video').addEventListener('click', function() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                    video.play();
+                    document.getElementById('start-container').style.display = 'none';
+                    document.querySelector('.card').style.display = 'block';
+                }).catch(function(error) {
+                console.error("Error accessing the media devices.", error);
+                alert("Error accessing the media devices: " + error.message);
+            });
+        }
+    });
+
+    document.getElementById('scan').addEventListener('click', function() {
+        const video = document.getElementById('video');
+        document.getElementById('loading').style.display = 'block';
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(function(blob) {
+            const formData = new FormData();
+            formData.append('image', blob, 'image.png');
+
+            fetch('https://heishen.live/upload', { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    if(data.decodedNumber) {
+                        document.getElementById('decoded-number').textContent = data.decodedNumber;
+                        document.getElementById('result').style.display = 'block';
+                    } else {
+                        alert('No matching image found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while scanning the image');
+                    document.getElementById('loading').style.display = 'none';
+                });
+        });
+    });
+</script>
+
+
+</body>
+</html>
